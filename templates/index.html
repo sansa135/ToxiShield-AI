@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>ToxiShield GenAI</title>
+
+    <script>
+
+        function liveTyping(){
+
+            let text =
+                document.getElementById(
+                    "comment"
+                ).value;
+
+            let warning =
+                document.getElementById(
+                    "typing-warning"
+                );
+
+            let badWords = [
+
+                "idiot",
+
+                "hate",
+
+                "stupid",
+
+                "kill",
+
+                "ugly"
+            ];
+
+            let detected = false;
+
+            for(let i=0;i<badWords.length;i++){
+
+                if(
+                    text.toLowerCase().includes(
+                        badWords[i]
+                    )
+                ){
+
+                    detected = true;
+                }
+            }
+
+            if(detected){
+
+                warning.innerHTML =
+                    "⚠ Toxic typing detected";
+
+            }else{
+
+                warning.innerHTML =
+                    "✅ Clean typing";
+            }
+        }
+
+    </script>
+
+    <style>
+
+        *{
+
+            margin:0;
+
+            padding:0;
+
+            box-sizing:border-box;
+        }
+
+        body{
+
+            background:#020617;
+
+            font-family:Arial;
+
+            color:white;
+
+            display:flex;
+
+            min-height:100vh;
+        }
+
+        .sidebar{
+
+            width:250px;
+
+            background:#0f172a;
+
+            padding:30px;
+        }
+
+        .sidebar h1{
+
+            margin-bottom:40px;
+
+            color:#38bdf8;
+        }
+
+        .menu div{
+
+            padding:15px;
+
+            background:#1e293b;
+
+            margin-bottom:15px;
+
+            border-radius:10px;
+        }
+
+        .main{
+
+            flex:1;
+
+            padding:40px;
+        }
+
+        .top{
+
+            display:grid;
+
+            grid-template-columns:
+            repeat(3,1fr);
+
+            gap:20px;
+        }
+
+        .analytics{
+
+            background:#0f172a;
+
+            padding:25px;
+
+            border-radius:15px;
+        }
+
+        .analytics h2{
+
+            color:#38bdf8;
+
+            margin-bottom:15px;
+        }
+
+        .input-box{
+
+            background:#0f172a;
+
+            padding:30px;
+
+            border-radius:20px;
+
+            margin-top:30px;
+        }
+
+        textarea{
+
+            width:100%;
+
+            height:180px;
+
+            background:#1e293b;
+
+            border:none;
+
+            border-radius:15px;
+
+            padding:20px;
+
+            color:white;
+
+            font-size:18px;
+        }
+
+        button{
+
+            width:100%;
+
+            margin-top:20px;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:12px;
+
+            background:#ef4444;
+
+            color:white;
+
+            font-size:18px;
+
+            cursor:pointer;
+        }
+
+        .card{
+
+            background:#0f172a;
+
+            padding:25px;
+
+            border-radius:15px;
+
+            margin-top:20px;
+        }
+
+        .bar{
+
+            width:100%;
+
+            height:30px;
+
+            background:#1e293b;
+
+            border-radius:20px;
+
+            overflow:hidden;
+
+            margin-top:20px;
+        }
+
+        .progress{
+
+            width:{{score}}%;
+
+            height:100%;
+
+            background:{{color}};
+        }
+
+        .history{
+
+            margin-top:30px;
+        }
+
+        .history-item{
+
+            background:#1e293b;
+
+            padding:20px;
+
+            border-radius:12px;
+
+            margin-top:15px;
+        }
+
+        #typing-warning{
+
+            margin-top:15px;
+
+            font-size:18px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h1>🚀 ToxiShield</h1>
+
+    <div class="menu">
+
+        <div>Dashboard</div>
+
+        <div>AI Detection</div>
+
+        <div>Analytics</div>
+
+        <div>Reports</div>
+
+        <div>Settings</div>
+
+    </div>
+
+</div>
+
+<div class="main">
+
+    <div class="top">
+
+        <div class="analytics">
+
+            <h2>Total Scans</h2>
+
+            <h1>{{ total_scans }}</h1>
+
+        </div>
+
+        <div class="analytics">
+
+            <h2>Toxic Comments</h2>
+
+            <h1>{{ toxic_count }}</h1>
+
+        </div>
+
+        <div class="analytics">
+
+            <h2>Safe Comments</h2>
+
+            <h1>{{ safe_count }}</h1>
+
+        </div>
+
+    </div>
+
+    <div class="input-box">
+
+        <form method="POST">
+
+            <textarea
+
+                    id="comment"
+
+                    name="comment"
+
+                    placeholder="Enter Comment..."
+
+                    onkeyup="liveTyping()"
+
+            ></textarea>
+
+            <div id="typing-warning">
+
+                ✅ Clean typing
+
+            </div>
+
+            <button type="submit">
+
+                Analyze with AI
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Detection Result</h2>
+
+        <br>
+
+        <h1>{{ result }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Toxicity Meter</h2>
+
+        <br>
+
+        <h1>{{ score }}%</h1>
+
+        <div class="bar">
+
+            <div class="progress"></div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Emotion Detection</h2>
+
+        <br>
+
+        <h1>{{ emotion }}</h1>
+
+    </div>
+
+    <div class="card">
+
+        <h2>AI Rewrite Suggestion</h2>
+
+        <br>
+
+        <h1>{{ rewrite }}</h1>
+
+    </div>
+
+    <div class="history">
+
+        <h2>Recent Analysis</h2>
+
+        {% for item in history %}
+
+        <div class="history-item">
+
+            <p><b>Comment:</b> {{ item[1] }}</p>
+
+            <p><b>Result:</b> {{ item[2] }}</p>
+
+            <p><b>Score:</b> {{ item[3] }}%</p>
+
+            <p><b>Emotion:</b> {{ item[4] }}</p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
